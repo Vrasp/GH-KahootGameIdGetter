@@ -1,10 +1,11 @@
-name: Get Kahoot Game ID
+
+name: Get Kahoot Quiz ID
 
 on:
   workflow_dispatch:
     inputs:
       pin:
-        description: "Kahoot game PIN (the code players use to join)"
+        description: "Live Kahoot game PIN"
         required: true
         type: string
 
@@ -13,7 +14,6 @@ permissions:
 
 jobs:
   get-game-id:
-    name: Retrieve Game ID from PIN
     runs-on: ubuntu-latest
 
     steps:
@@ -28,13 +28,24 @@ jobs:
       - name: Install dependencies
         run: pip install requests
 
-      - name: Get Game ID
+      - name: Inspect Kahoot session
         id: get_game_id
         run: python get_game_id.py "${{ inputs.pin }}"
 
-      - name: Print Game ID
+      - name: Print results
+        env:
+          GAME_PIN: ${{ inputs.pin }}
+          LIVE_ID: ${{ steps.get_game_id.outputs.live_game_id }}
+          QUIZ_ID: ${{ steps.get_game_id.outputs.quiz_id }}
         run: |
-          echo "================================================"
-          echo "  Kahoot PIN  : ${{ inputs.pin }}"
-          echo "  Game ID     : ${{ steps.get_game_id.outputs.game_id }}"
-          echo "================================================"
+          echo "========================================"
+          echo "Kahoot PIN: $GAME_PIN"
+          echo "Live Session ID: $LIVE_ID"
+
+          if [ -n "$QUIZ_ID" ]; then
+            echo "Verified Quiz ID: $QUIZ_ID"
+          else
+            echo "Verified Quiz ID: NOT FOUND"
+          fi
+
+          echo "========================================"
