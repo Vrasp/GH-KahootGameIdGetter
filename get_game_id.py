@@ -206,11 +206,11 @@ def get_game_info(pin: str) -> tuple[str, dict]:
             game_id = uuids[0]
 
     if not game_id:
-    value = data.get("liveGameId")
-    print(f"liveGameId value: {value!r}")
-    print(f"liveGameId type: {type(value).__name__}")
+        value = data.get("liveGameId")
+        print(f"liveGameId value: {value!r}")
+        print(f"liveGameId type: {type(value).__name__}")
 
-    print("[ERROR] Could not extract the game ID from the Kahoot API response.")
+        print("[ERROR] Could not extract the game ID from the Kahoot API response.")
         print(f"Response fields available: {list(data.keys())}")
         print(f"Session token present: {bool(session_token)}")
         sys.exit(1)
